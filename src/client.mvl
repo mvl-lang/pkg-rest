@@ -29,7 +29,7 @@ pub type RestError = enum {
 }
 
 /// Format a RestError as a human-readable string.
-pub fn rest_error_msg(e: val RestError) -> String {
+pub total fn rest_error_msg(e: val RestError) -> String {
     match e {
         RestError::HttpError(he) => "https: ".concat(https_error_msg(he)),
         RestError::JsonParseError(msg) => "json parse: ".concat(msg),
@@ -39,13 +39,13 @@ pub fn rest_error_msg(e: val RestError) -> String {
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
-fn json_headers() -> Map[String, String] {
+total fn json_headers() -> Map[String, String] {
     let m: ref Map[String, String] = {"Content-Type": "application/json"};
     m.insert("Accept", "application/json");
     m
 }
 
-fn map_http_err(e: HttpsError) -> RestError {
+total fn map_http_err(e: HttpsError) -> RestError {
     RestError::HttpError(e)
 }
 
@@ -57,16 +57,16 @@ partial fn parse_json_body(resp: HttpsResponse) -> Result[Value, RestError] {
     }
 }
 
-fn is_success(code: Int) -> Bool {
+total fn is_success(code: Int) -> Bool {
     code >= 200 && code < 300
 }
 
 /// Merge `extra` headers on top of `base`, overwriting on conflict.
-partial fn merge_headers(base: Map[String, String], extra: Map[String, String]) -> Map[String, String] {
+total fn merge_headers(base: Map[String, String], extra: Map[String, String]) -> Map[String, String] {
     let result: ref Map[String, String] = base;
     let keys: List[String] = extra.keys();
     let ki: ref Int = 0;
-    while ki < keys.len() {
+    while ki < keys.len() decreases keys.len() - ki {
         match keys.get(ki) {
             Some(k) => match extra.get(k) {
                 Some(v) => result.insert(k, v),
