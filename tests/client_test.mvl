@@ -5,7 +5,9 @@
 //
 // Assurance note: 0 extern blocks.
 
-// ── Type re-declarations (workaround: #96) ────────────────────────────────
+// ── Type re-declarations ──────────────────────────────────────────────────
+// Tests live in tests/, source in src/ — the test runner only scans siblings
+// of the test file, so src/client.mvl types are not auto-loaded here.
 
 type HttpsError = enum {
     InvalidUrl(String),
