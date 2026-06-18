@@ -4,6 +4,18 @@ All notable changes to pkg-rest will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.0] - 2026-06-18
+
+### Added
+- `coverage`, `prove`, and `version` Makefile targets
+- `.openspec/adr/0001-rest-client-design.md` — documents JSON-in/JSON-out adapter design and IFC audit tags
+- `.openspec/adr/0002-totality-policy.md` — explicit `total fn` annotation policy
+
+### Changed
+- `Makefile`: `MVL :=` now auto-selects local debug build when present (`../../target/debug/mvl`)
+- `rest_error_msg`, `json_headers`, `map_http_err`, `is_success` graduated from bare `fn` to `total fn`
+- `merge_headers` graduated from `partial fn` to `total fn` with `decreases keys.len() - ki` termination annotation
+
 ## [0.1.0] - 2026-05-31
 
 ### Added
