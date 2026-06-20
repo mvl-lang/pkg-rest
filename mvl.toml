@@ -1,5 +1,9 @@
 [package]
 name         = "rest"
-version      = "0.2.0"
+version      = "0.3.0"
 license      = "Apache-2.0"
-requires-mvl = ">=0.154.0"
+requires-mvl = ">=0.205.0"
+
+[dependencies]
+"github.com/mvl-lang/pkg-http" = { git = "https://github.com/mvl-lang/pkg-http", tag = "v0.2.3", rationale = "HTTP types and REST helpers — re-exported for convenience" }
+"github.com/mvl-lang/pkg-tls" = { git = "https://github.com/mvl-lang/pkg-tls", tag = "v0.1.4", rationale = "HTTPS transport for REST client" }

@@ -4,6 +4,21 @@ All notable changes to pkg-rest will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.0] - 2026-06-20
+
+### Added
+- `src/server.mvl` — server-side route builder module
+- `RestRouter` type with fluent builder API
+- `router()` constructor and `.get()`, `.post()`, `.put()`, `.delete()`, `.patch()`, `.build()` methods
+- Dependency on `pkg-http` v0.2.3 for HTTP types and routing
+
+### Changed
+- Bumped `requires-mvl` to `>=0.205.0`
+
+### Notes
+- Typed handler dispatch (`.get("/path", handler_fn)`) blocked by mvl #1467
+- Current builder uses string names; typed dispatch coming when #1467 is fixed
+
 ## [0.2.0] - 2026-06-18
 
 ### Added
