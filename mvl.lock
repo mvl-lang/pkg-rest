@@ -3,10 +3,11 @@
 
 [[package]]
 name = "github.com/mvl-lang/pkg-http"
-version = "0.2.3"
-hash = "sha256:f1605b1c88fedadaf9fb681c86326dce6ac2fe7a58d8c01fb0cd7b155302cd82"
-commit = "c3dd21618efb514caae9b76d9fa1a910afb077ae"
+version = "0.4.0"
+hash = "sha256:b799a9fb555343ba0036b1534f5eaa30f76f2b876e8525212da19992b9fc0e8a"
+commit = "b1e149aac7cb3a266598df3339c4eac1bc9d6ea9"
 git = "https://github.com/mvl-lang/pkg-http"
+last-checked = 1782067592
 
 [[package]]
 name = "github.com/mvl-lang/pkg-tls"
@@ -14,3 +15,4 @@ version = "0.2.0"
 hash = "sha256:bb003638cf4531051b06ee0efd7f6acdb045ec4c5f5880a6c012a7bfe1c4a262"
 commit = "adf077db8908ecba39d24bf3e6ca940b02016883"
 git = "https://github.com/mvl-lang/pkg-tls"
+last-checked = 1782067592

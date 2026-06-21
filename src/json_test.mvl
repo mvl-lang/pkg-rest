@@ -1,0 +1,121 @@
+// pkg.rest.json tests — typed JSON helpers.
+//
+// All functions here are pure (no effects).
+use json::{http_not_found, http_bad_request, http_unauthorized, http_internal_error,
+           json_no_content, json_ok_str, json_created_str, json_str,
+           param_string, param_int}
+
+use pkg.http.{Response, HttpError, MatchedRoute, status_code}
+
+// ── HttpError constructors ────────────────────────────────────────────────────
+
+test fn http_not_found_has_404() -> Unit {
+    let e: HttpError = http_not_found("user");
+    assert_eq(status_code(e.status), 404);
+    assert_eq(e.detail, "user")
+}
+
+test fn http_bad_request_has_400() -> Unit {
+    let e: HttpError = http_bad_request("malformed");
+    assert_eq(status_code(e.status), 400);
+    assert_eq(e.detail, "malformed")
+}
+
+test fn http_unauthorized_has_401() -> Unit {
+    let e: HttpError = http_unauthorized("login required");
+    assert_eq(status_code(e.status), 401)
+}
+
+test fn http_internal_error_has_500() -> Unit {
+    let e: HttpError = http_internal_error("oops");
+    assert_eq(status_code(e.status), 500)
+}
+
+// ── Response builders ─────────────────────────────────────────────────────────
+
+test fn json_no_content_has_204() -> Unit {
+    let r: Response = json_no_content();
+    assert_eq(status_code(r.status), 204);
+    assert_eq(r.body, "")
+}
+
+test fn json_ok_str_has_200() -> Unit {
+    let r: Response = json_ok_str("{\"k\":1}");
+    assert_eq(status_code(r.status), 200);
+    assert_eq(r.body, "{\"k\":1}")
+}
+
+test fn json_ok_str_content_type() -> Unit {
+    let r: Response = json_ok_str("{}");
+    match r.headers.get("Content-Type") {
+        Some(ct) => assert_eq(ct, "application/json"),
+        None => assert_eq(true, false),
+    }
+}
+
+test fn json_created_str_has_201() -> Unit {
+    let r: Response = json_created_str("{}");
+    assert_eq(status_code(r.status), 201)
+}
+
+// ── json_str escaping ─────────────────────────────────────────────────────────
+
+test fn json_str_simple() -> Unit {
+    assert_eq(json_str("hello"), "\"hello\"")
+}
+
+test fn json_str_escapes_quotes() -> Unit {
+    assert_eq(json_str("say \"hi\""), "\"say \\\"hi\\\"\"")
+}
+
+test fn json_str_escapes_backslash() -> Unit {
+    assert_eq(json_str("a\\b"), "\"a\\\\b\"")
+}
+
+test fn json_str_empty() -> Unit {
+    assert_eq(json_str(""), "\"\"")
+}
+
+// ── param_string ──────────────────────────────────────────────────────────────
+
+test fn param_string_present() -> Unit {
+    let m: MatchedRoute = MatchedRoute { name: "x", params: {"id": "42"} };
+    match param_string(m, "id") {
+        Ok(v) => assert_eq(v, "42"),
+        Err(_) => assert_eq(true, false),
+    }
+}
+
+test fn param_string_missing() -> Unit {
+    let m: MatchedRoute = MatchedRoute { name: "x", params: Map::new() };
+    match param_string(m, "id") {
+        Ok(_) => assert_eq(true, false),
+        Err(e) => assert_eq(status_code(e.status), 400),
+    }
+}
+
+// ── param_int ─────────────────────────────────────────────────────────────────
+
+test fn param_int_valid() -> Unit {
+    let m: MatchedRoute = MatchedRoute { name: "x", params: {"id": "42"} };
+    match param_int(m, "id") {
+        Ok(n) => assert_eq(n, 42),
+        Err(_) => assert_eq(true, false),
+    }
+}
+
+test fn param_int_not_integer() -> Unit {
+    let m: MatchedRoute = MatchedRoute { name: "x", params: {"id": "abc"} };
+    match param_int(m, "id") {
+        Ok(_) => assert_eq(true, false),
+        Err(e) => assert_eq(status_code(e.status), 400),
+    }
+}
+
+test fn param_int_missing() -> Unit {
+    let m: MatchedRoute = MatchedRoute { name: "x", params: Map::new() };
+    match param_int(m, "id") {
+        Ok(_) => assert_eq(true, false),
+        Err(e) => assert_eq(status_code(e.status), 400),
+    }
+}
