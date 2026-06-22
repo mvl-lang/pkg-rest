@@ -4,6 +4,12 @@ All notable changes to pkg-rest will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.1] - 2026-06-22
+
+### Fixed
+- Renamed local `is_success(code: Int)` → `is_2xx(code: Int)` to avoid name collision with pkg-http's `is_success(s: HttpStatus)` when both are loaded into the same test crate.
+- Removed `ref` from `hdrs` bindings in `rest_post_json` and `rest_get_json` — values are not mutated; eliminates `unused_mut` rustc warnings during `make coverage`.
+
 ## [0.4.0] - 2026-06-21
 
 ### Added

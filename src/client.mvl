@@ -54,7 +54,7 @@ partial fn parse_json_body(resp: HttpsResponse) -> Result[Value, RestError] {
     }
 }
 
-total fn is_success(code: Int) -> Bool { code >= 200 && code < 300 }
+total fn is_2xx(code: Int) -> Bool { code >= 200 && code < 300 }
 
 /// Merge `extra` headers on top of `base`, overwriting on conflict.
 total fn merge_headers(
@@ -90,7 +90,7 @@ pub partial fn rest_post_json(
     body: Value,
 ) -> Result[Value, RestError] ! Net {
     let body_str: String = encode(body);
-    let hdrs: ref Map[String, String] = merge_headers(json_headers(), extra_headers);
+    let hdrs: Map[String, String] = merge_headers(json_headers(), extra_headers);
     let resp: HttpsResponse = match https_post(url, hdrs, body_str) {
         Ok(r) => r,
         Err(e) => {
@@ -98,7 +98,7 @@ pub partial fn rest_post_json(
         },
     };
     let code: Int = resp.status_code;
-    if is_success(code) {
+    if is_2xx(code) {
         parse_json_body(resp)
     } else {
         let err_body: String = relabel trust(resp.body, "REST-ERROR-DISPLAY");
@@ -117,7 +117,7 @@ pub partial fn rest_get_json(
     url: String,
     extra_headers: Map[String, String],
 ) -> Result[Value, RestError] ! Net {
-    let hdrs: ref Map[String, String] = merge_headers({"Accept": "application/json"}, extra_headers);
+    let hdrs: Map[String, String] = merge_headers({"Accept": "application/json"}, extra_headers);
     let resp: HttpsResponse = match https_request("GET", url, hdrs, "") {
         Ok(r) => r,
         Err(e) => {
@@ -125,7 +125,7 @@ pub partial fn rest_get_json(
         },
     };
     let code: Int = resp.status_code;
-    if is_success(code) {
+    if is_2xx(code) {
         parse_json_body(resp)
     } else {
         let err_body: String = relabel trust(resp.body, "REST-ERROR-DISPLAY");
