@@ -54,7 +54,7 @@ partial fn parse_json_body(resp: HttpsResponse) -> Result[Value, RestError] {
     }
 }
 
-total fn is_2xx(code: Int) -> Bool { code >= 200 && code < 300 }
+total fn is_success(code: Int) -> Bool { code >= 200 && code < 300 }
 
 /// Merge `extra` headers on top of `base`, overwriting on conflict.
 total fn merge_headers(
@@ -98,7 +98,7 @@ pub partial fn rest_post_json(
         },
     };
     let code: Int = resp.status_code;
-    if is_2xx(code) {
+    if is_success(code) {
         parse_json_body(resp)
     } else {
         let err_body: String = relabel trust(resp.body, "REST-ERROR-DISPLAY");
@@ -125,7 +125,7 @@ pub partial fn rest_get_json(
         },
     };
     let code: Int = resp.status_code;
-    if is_2xx(code) {
+    if is_success(code) {
         parse_json_body(resp)
     } else {
         let err_body: String = relabel trust(resp.body, "REST-ERROR-DISPLAY");
